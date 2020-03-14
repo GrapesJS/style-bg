@@ -1,3 +1,5 @@
+import * as styleTypes from './styleTypes';
+
 export default (editor, opts = {}) => {
   const options = { ...{
     i18n: {},
@@ -26,93 +28,40 @@ export default (editor, opts = {}) => {
     ],
     ...options.inputFilterType,
   };
-  const typeBg = {
-    name: ' ',
-    property: 'bg-type',
-    type: 'radio',
-    defaults: 'img',
-    options: [
-      { value: 'img' },
-      { value: 'color' },
-      { value: 'grad' },
-    ],
-  };
-  const typeImage = {
-    property: 'background-image',
-    type: 'file',
-    functionName: 'url',
-  };
-  const typeBgRepeat = {
-    property: 'background-repeat',
-    type: 'select',
-    defaults: 'repeat',
-    options: [
-      { value: 'repeat' },
-      { value: 'repeat-x' },
-      { value: 'repeat-y' },
-      { value: 'no-repeat' }
-    ],
-  };
-  const typeBgPos = {
-    property: 'background-position',
-    type: 'select',
-    defaults: 'left top',
-    options: [
-      { value: 'left top' },
-      { value: 'left center' },
-      { value: 'left bottom' },
-      { value: 'right top' },
-      { value: 'right center' },
-      { value: 'right bottom' },
-      { value: 'center top' },
-      { value: 'center center' },
-      { value: 'center bottom' }
-    ],
-  };
-  const typeBgAttach = {
-    property: 'background-attachment',
-    type: 'select',
-    defaults: 'scroll',
-    options: [
-      { value: 'scroll' },
-      { value: 'fixed' },
-      { value: 'local' }
-    ],
-  };
-  const typeBgSize = {
-    property: 'background-size',
-    type: 'select',
-    defaults: 'auto',
-    options: [
-      { value: 'auto' },
-      { value: 'cover' },
-      { value: 'contain' }
-    ],
-  };
 
 
   const typeTestImg = {
     property: 'test-img-1',
+    defaults: 'auto-img1',
   };
   const typeTestCol = {
     property: 'test-color-1',
+    defaults: 'auto-cl1',
   };
   const typeTestCol2 = {
     property: 'test-color-2',
+    defaults: 'auto-cl2',
   };
   const typeTestGr = {
     property: 'test-gr-1',
+    defaults: 'auto-gr1',
   };
   const typeTestGr2 = {
     property: 'test-gr-2',
+    defaults: 'auto-gr2',
   };
   const typeTestGr3 = {
     property: 'test-gr-3',
+    defaults: 'auto-gr3',
   };
 
   const getPropsByType = type => {
     let result = [
-      typeTestImg,
+      styleTypes.typeImage,
+      styleTypes.typeBgRepeat,
+      styleTypes.typeBgPos,
+      styleTypes.typeBgAttach,
+      styleTypes.typeBgSize,
     ];
 
     switch (type) {
@@ -131,9 +80,10 @@ export default (editor, opts = {}) => {
     model: propModel.extend({
       defaults: () => ({
         ...propModel.prototype.defaults,
+        detached: 1,
         properties: [
-          typeBg,
-          typeTestImg,
+          styleTypes.typeBg,
+          ...getPropsByType(),
         ],
       }),
 
@@ -142,74 +92,45 @@ export default (editor, opts = {}) => {
         this.listenTo(this.getLayers(), 'add', this.onNewLayerAdd);
       },
 
+      _updateLayerProps(layer, type) {
+        const props = layer.get('properties');
+        props.remove(props.filter((it, id) => id !== 0));
+        getPropsByType(type).forEach(item => props.push(item))
+      },
+
       /**
        * On new added layer we should listen to filter_type change
        * @param  {Layer} layer
        */
       onNewLayerAdd(layer) {
-        console.log('onNewLayerAdd');
         const typeProp = layer.getPropertyAt(0);
         layer.listenTo(typeProp, 'change:value', this.handleTypeChange)
+        // this._updateLayerProps(layer, typeProp.get('value'));
       },
 
       handleTypeChange(propType, type) {
         const currLayer = this.getCurrentLayer();
-        // const strProps = this.getStrengthPropsByType(functionName);
-        // propType.collection.at(1).set(strProps);
-        if (currLayer) {
-          //currLayer && currLayer.get('properties').reset(getPropsByType(type));
-          const props = currLayer.get('properties');
-          props.remove(props.filter((it, id) => id !== 0));
-          props.push(getPropsByType(type));
-          console.log('After change', props.length);
-        }
+        currLayer && this._updateLayerProps(currLayer, type);
         console.log({ currLayer, propType, type, props: getPropsByType(type), });
       },
 
-      getLayersFromTarget(target, { resultValue } = {}) {
+      getLayersFromTarget(target, { resultValue, layersObj } = {}) {
         const layers = [];
         const layerValues = resultValue || target.getStyle()[this.get('property')];
+        console.log({ resultValue, targetValue: target.getStyle()[this.get('property')], layersObj });
 
-        layerValues && layerValues.split(' ').forEach(layerValue => {
-          const parserOpts = { complete: 1, numeric: 1 };
-          const { value, unit, functionName } = this.parseValue(layerValue, parserOpts);
-          layers.push({
-            properties: [
-              { ...filterType, value: functionName },
-              { ...filterStrength,
-                ...this.getStrengthPropsByType(functionName), value, unit },
-            ]
-          })
-        });
+        // layerValues && layerValues.split(' ').forEach(layerValue => {
+        //   const parserOpts = { complete: 1, numeric: 1 };
+        //   const { value, unit, functionName } = this.parseValue(layerValue, parserOpts);
+        //   layers.push({
+        //     properties: [
+        //       { ...filterType, value: functionName },
+        //       { ...this.getStrengthPropsByType(functionName), value, unit },
+        //     ]
+        //   })
+        // });
 
-        return layers;
-      },
-
-      getStrengthPropsByType(functionName) {
-        let unit = '%';
-        let units = ['%'];
-        let max = 100;
-
-        switch (functionName) {
-          case 'blur':
-            unit = 'px';
-            units = ['px'];
-            break;
-          case 'hue-rotate':
-            unit = 'deg';
-            units = ['deg'];
-            max = 360;
-            break;
-        }
-
-        const result = {
-            functionName,
-            unit,
-            units,
-            max,
-        };
-
-        return result;
+        // return layers;
       },
 
       /**
@@ -218,12 +139,12 @@ export default (editor, opts = {}) => {
        * filter_strength result
        * @return {string}
        */
-      getFullValue() {
-        return this.getLayers()
-          .map(layer => layer.getPropertyAt(1))
-          .map(prop => prop ? prop.getFullValue() : '')
-          .join(' ');
-      },
+      // getFullValue() {
+      //   return this.getLayers()
+      //     .map(layer => layer.getPropertyAt(1))
+      //     .map(prop => prop ? prop.getFullValue() : '')
+      //     .join(' ');
+      // },
     }),
     view: stack.view,
   })
