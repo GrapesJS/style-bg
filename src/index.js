@@ -10,26 +10,6 @@ export default (editor, opts = {}) => {
   const sm = editor.StyleManager;
   const stack = sm.getType('stack');
   const propModel = stack.model;
-  const filterType = {
-    property: 'filter_type',
-    name: 'Type',
-    type: 'select',
-    defaults: 'sepia',
-    full: 1,
-    list: [
-      { value: 'blur'},
-      { value: 'brightness'},
-      { value: 'contrast'},
-      { value: 'grayscale'},
-      { value: 'hue-rotate'},
-      { value: 'invert'},
-      { value: 'opacity'},
-      { value: 'saturate'},
-      { value: 'sepia'},
-    ],
-    ...options.inputFilterType,
-  };
-
   const typeTestGr = {
     property: 'test-gr-1',
     defaults: 'auto-gr1',
@@ -42,8 +22,6 @@ export default (editor, opts = {}) => {
     property: 'test-gr-3',
     defaults: 'auto-gr3',
   };
-
-  const splitValues = (values, model) => model.splitValues(values);
 
   const getPropsByType = type => {
     let result = [
@@ -97,13 +75,11 @@ export default (editor, opts = {}) => {
       onNewLayerAdd(layer) {
         const typeProp = layer.getPropertyAt(0);
         layer.listenTo(typeProp, 'change:value', this.handleTypeChange)
-        // this._updateLayerProps(layer, typeProp.get('value'));
       },
 
       handleTypeChange(propType, type) {
         const currLayer = this.getCurrentLayer();
         currLayer && this._updateLayerProps(currLayer, type);
-        // console.log({ currLayer, propType, type, props: getPropsByType(type), });
       },
 
       getLayersFromTarget(target, { resultValue } = {}) {
@@ -140,19 +116,6 @@ export default (editor, opts = {}) => {
 
         return layers;
       },
-
-      /**
-       * The value that will be set on target.
-       * For the filter type we only need the
-       * filter_strength result
-       * @return {string}
-       */
-      // getFullValue() {
-      //   return this.getLayers()
-      //     .map(layer => layer.getPropertyAt(1))
-      //     .map(prop => prop ? prop.getFullValue() : '')
-      //     .join(' ');
-      // },
     }),
     view: stack.view,
   })
