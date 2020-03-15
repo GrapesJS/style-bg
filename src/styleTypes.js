@@ -1,6 +1,9 @@
+// Types for image background
+export const typeBgKey = '__bg-type';
+
 export const typeBg = {
   name: ' ',
-  property: 'bg-type',
+  property: typeBgKey,
   type: 'radio',
   defaults: 'img',
   options: [
@@ -66,3 +69,12 @@ export const typeBgSize = {
     { value: 'contain' }
   ],
 };
+
+// Linear color
+
+export const typeColorLin = {
+    property: 'background-image',
+    type: 'color-linear',
+    full: 1,
+    defaults: 'none',
+  };

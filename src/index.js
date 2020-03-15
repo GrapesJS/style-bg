@@ -1,4 +1,5 @@
 import * as styleTypes from './styleTypes';
+import loadColorLinear from './colorLinear';
 
 export default (editor, opts = {}) => {
   const options = { ...{
@@ -29,19 +30,6 @@ export default (editor, opts = {}) => {
     ...options.inputFilterType,
   };
 
-
-  const typeTestImg = {
-    property: 'test-img-1',
-    defaults: 'auto-img1',
-  };
-  const typeTestCol = {
-    property: 'test-color-1',
-    defaults: 'auto-cl1',
-  };
-  const typeTestCol2 = {
-    property: 'test-color-2',
-    defaults: 'auto-cl2',
-  };
   const typeTestGr = {
     property: 'test-gr-1',
     defaults: 'auto-gr1',
@@ -55,6 +43,8 @@ export default (editor, opts = {}) => {
     defaults: 'auto-gr3',
   };
 
+  const splitValues = (values, model) => model.splitValues(values);
+
   const getPropsByType = type => {
     let result = [
       styleTypes.typeImage,
@@ -66,7 +56,7 @@ export default (editor, opts = {}) => {
 
     switch (type) {
       case 'color':
-        result = [ typeTestCol, typeTestCol2 ]
+        result = [ styleTypes.typeColorLin ]
         break;
       case 'grad':
         result = [ typeTestGr, typeTestGr2, typeTestGr3 ]
@@ -76,6 +66,7 @@ export default (editor, opts = {}) => {
     return result;
   };
 
+  loadColorLinear(editor, sm);
   sm.addType('bg', {
     model: propModel.extend({
       defaults: () => ({
@@ -111,26 +102,43 @@ export default (editor, opts = {}) => {
       handleTypeChange(propType, type) {
         const currLayer = this.getCurrentLayer();
         currLayer && this._updateLayerProps(currLayer, type);
-        console.log({ currLayer, propType, type, props: getPropsByType(type), });
+        // console.log({ currLayer, propType, type, props: getPropsByType(type), });
       },
 
-      getLayersFromTarget(target, { resultValue, layersObj } = {}) {
+      getLayersFromTarget(target, { resultValue } = {}) {
         const layers = [];
         const layerValues = resultValue || target.getStyle()[this.get('property')];
-        console.log({ resultValue, targetValue: target.getStyle()[this.get('property')], layersObj });
+        const types = layerValues[styleTypes.typeBgKey];
 
-        // layerValues && layerValues.split(' ').forEach(layerValue => {
-        //   const parserOpts = { complete: 1, numeric: 1 };
-        //   const { value, unit, functionName } = this.parseValue(layerValue, parserOpts);
-        //   layers.push({
-        //     properties: [
-        //       { ...filterType, value: functionName },
-        //       { ...this.getStrengthPropsByType(functionName), value, unit },
-        //     ]
-        //   })
-        // });
+        if (types) {
+          this.splitValues(types).forEach((type, idx) => {
+            const props = getPropsByType(type);
+            layers.push({
+              properties: [
+                { ...styleTypes.typeBg, value: type },
+                ...props.map(prop => {
+                  const values = this.splitValues(layerValues[prop.property]);
+                  let value = values[idx];
 
-        // return layers;
+                  if (prop.type == 'color-linear') {
+                    const parsedValue = this.parseValue(value, { complete: 1 });
+                    value = this.splitValues(parsedValue.value)[0];
+                  } else if (prop.type == 'file') {
+                    value = this.parseValue(value, { complete: 1 }).value;
+                  }
+
+                  return {
+                    ...prop,
+                    ...value && { value },
+                  }
+                }),
+              ]
+            })
+          });
+        }
+
+        console.log({ resultValue, layers });
+        return layers;
       },
 
       /**
