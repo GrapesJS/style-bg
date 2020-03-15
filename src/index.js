@@ -101,7 +101,7 @@ export default (editor, opts = {}) => {
                     const parsedValue = this.parseValue(value, { complete: 1 });
                     value = this.splitValues(parsedValue.value)[0];
                   } else if (prop.type == 'file') {
-                    value = this.parseValue(value, { complete: 1 }).value;
+                    value = value && this.parseValue(value, { complete: 1 }).value;
                   }
 
                   return {
