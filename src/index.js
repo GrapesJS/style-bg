@@ -72,6 +72,7 @@ export default (editor, opts = {}) => {
       defaults: () => ({
         ...propModel.prototype.defaults,
         detached: 1,
+        preview: 1,
         properties: [
           styleTypes.typeBg,
           ...getPropsByType(),
@@ -137,7 +138,6 @@ export default (editor, opts = {}) => {
           });
         }
 
-        console.log({ resultValue, layers });
         return layers;
       },
 
