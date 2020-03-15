@@ -10,19 +10,6 @@ export default (editor, opts = {}) => {
   const sm = editor.StyleManager;
   const stack = sm.getType('stack');
   const propModel = stack.model;
-  const typeTestGr = {
-    property: 'test-gr-1',
-    defaults: 'auto-gr1',
-  };
-  const typeTestGr2 = {
-    property: 'test-gr-2',
-    defaults: 'auto-gr2',
-  };
-  const typeTestGr3 = {
-    property: 'test-gr-3',
-    defaults: 'auto-gr3',
-  };
-
   const getPropsByType = type => {
     let result = [
       styleTypes.typeImage,
@@ -37,7 +24,7 @@ export default (editor, opts = {}) => {
         result = [ styleTypes.typeColorLin ]
         break;
       case 'grad':
-        result = [ typeTestGr, typeTestGr2, typeTestGr3 ]
+        result = [ styleTypes.typeGradient ]
         break;
     }
 
@@ -113,7 +100,7 @@ export default (editor, opts = {}) => {
             })
           });
         }
-
+        console.log({ layers, resultValue });
         return layers;
       },
     }),

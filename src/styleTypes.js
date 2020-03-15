@@ -73,8 +73,19 @@ export const typeBgSize = {
 // Linear color
 
 export const typeColorLin = {
-    property: 'background-image',
-    type: 'color-linear',
-    full: 1,
-    defaults: 'none',
-  };
+  property: 'background-image',
+  type: 'color-linear',
+  defaults: 'none',
+  full: 1,
+};
+
+// Gradient type
+
+export const typeGradient = {
+  name: '&nbsp;',
+  property: 'background-image',
+  type: 'gradient',
+  value: 'linear-gradient(left, red 0%, blue 100%)',
+  defaults: 'none',
+  full: 1,
+};
