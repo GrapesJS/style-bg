@@ -44,7 +44,7 @@ export default (editor, opts = {}) => {
         break;
     }
 
-    return result;
+    return options.typeProps(result, type) || result;
   };
 
   styleGradient(editor, {
