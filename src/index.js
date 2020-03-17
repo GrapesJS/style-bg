@@ -1,9 +1,12 @@
+import styleGradient from 'grapesjs-style-gradient';
 import * as styleTypes from './styleTypes';
 import loadColorLinear from './colorLinear';
 
 export default (editor, opts = {}) => {
   const options = { ...{
     i18n: {},
+    // Options for the `grapesjs-style-gradient` plugin
+    styleGradientOpts: {},
     // default options
   },  ...opts };
 
@@ -31,6 +34,10 @@ export default (editor, opts = {}) => {
     return result;
   };
 
+  styleGradient(editor, {
+    colorPicker: 'default',
+    ...options.styleGradientOpts,
+  });
   loadColorLinear(editor, sm);
   sm.addType('bg', {
     model: propModel.extend({
