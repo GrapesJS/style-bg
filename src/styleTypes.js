@@ -1,5 +1,5 @@
 // Types for image background
-export const typeBgKey = '__bg-type';
+import { typeBgKey } from './utils';
 
 export const typeBg = {
   name: ' ',

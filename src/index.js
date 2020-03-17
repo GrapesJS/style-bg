@@ -1,6 +1,7 @@
 import styleGradient from 'grapesjs-style-gradient';
-import * as styleTypes from './styleTypes';
+import * as styleTypesAll from './styleTypes';
 import loadColorLinear from './colorLinear';
+import { typeBgKey } from './utils';
 
 export default (editor, opts = {}) => {
   const options = { ...{
@@ -16,9 +17,15 @@ export default (editor, opts = {}) => {
     typeProps: p => p,
   },  ...opts };
 
+  let styleTypes = { ...styleTypesAll };
   const sm = editor.StyleManager;
   const stack = sm.getType('stack');
   const propModel = stack.model;
+  styleTypes = Object.keys(styleTypes).reduce((acc, item) => {
+    const prop = styleTypes[item];
+    acc[item] = options.propExtender(prop) || prop;
+    return acc;
+  }, {});
   const getPropsByType = type => {
     let result = [
       styleTypes.typeImage,
@@ -86,7 +93,7 @@ export default (editor, opts = {}) => {
       getLayersFromTarget(target, { resultValue } = {}) {
         const layers = [];
         const layerValues = resultValue || target.getStyle()[this.get('property')];
-        const types = layerValues[styleTypes.typeBgKey];
+        const types = layerValues[typeBgKey];
 
         if (types) {
           this.splitValues(types).forEach((type, idx) => {
