@@ -80,6 +80,7 @@ export default (editor, opts = {}) => {
       handleTypeChange(propType, type) {
         const currLayer = this.getCurrentLayer();
         currLayer && this._updateLayerProps(currLayer, type);
+        this.trigger('updateValue');
       },
 
       getLayersFromTarget(target, { resultValue } = {}) {
