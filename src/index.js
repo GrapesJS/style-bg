@@ -7,7 +7,13 @@ export default (editor, opts = {}) => {
     i18n: {},
     // Options for the `grapesjs-style-gradient` plugin
     styleGradientOpts: {},
-    // default options
+
+    // Extend single style property definition of the plugin.
+    // You can this, for example, to change the defauld gradient color
+    propExtender: p => p,
+
+    // Use this function to change/add/extend style properties for each BG type
+    typeProps: p => p,
   },  ...opts };
 
   const sm = editor.StyleManager;
