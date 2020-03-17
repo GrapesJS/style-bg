@@ -6,7 +6,10 @@ export default (editor, sm) => {
     model: propModel.extend({
         getFullValue() {
             const value = this.get('value');
-            return value ? `linear-gradient(${value},${value})` : '';
+            const def = this.get('defaults');
+            return value ?
+              (value === def ? def : `linear-gradient(${value},${value})`) :
+              '';
         },
     }),
     view: typeColor.view

@@ -17,6 +17,7 @@ export const typeImage = {
   property: 'background-image',
   type: 'file',
   functionName: 'url',
+  defaults: 'none',
 };
 
 export const typeBgRepeat = {
