@@ -85,7 +85,7 @@ export const typeGradient = {
   name: '&nbsp;',
   property: 'background-image',
   type: 'gradient',
-  value: 'linear-gradient(left, red 0%, blue 100%)',
+  value: 'linear-gradient(90deg, red 0%, blue 100%)',
   defaults: 'none',
   full: 1,
 };
