@@ -16,6 +16,7 @@ export const typeBg = {
 };
 
 export const typeImage = {
+  name: ' ',
   property: 'background-image',
   type: 'file',
   functionName: 'url',
@@ -76,6 +77,7 @@ export const typeBgSize = {
 // Linear color
 
 export const typeColorLin = {
+  name: ' ',
   property: 'background-image',
   type: 'color-linear',
   defaults: 'none',
