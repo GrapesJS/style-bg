@@ -49,6 +49,8 @@ export default (editor, opts = {}) => {
 
   styleGradient(editor, {
     colorPicker: 'default',
+    inputDirection: { property: '__gradient-direction' },
+    inputType: { property: '__gradient-type' },
     ...options.styleGradientOpts,
   });
   loadColorLinear(editor, sm);
@@ -84,10 +86,10 @@ export default (editor, opts = {}) => {
         layer.listenTo(typeProp, 'change:value', this.handleTypeChange)
       },
 
-      handleTypeChange(propType, type) {
+      handleTypeChange(propType, type, opts) {
         const currLayer = this.getCurrentLayer();
         currLayer && this._updateLayerProps(currLayer, type);
-        this.trigger('updateValue');
+        opts.fromInput && this.trigger('updateValue');
       },
 
       getLayersFromTarget(target, { resultValue } = {}) {
