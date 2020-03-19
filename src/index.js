@@ -60,6 +60,7 @@ export default (editor, opts = {}) => {
         ...propModel.prototype.defaults,
         detached: 1,
         preview: 1,
+        full: 1,
         properties: [
           styleTypes.typeBg,
           ...getPropsByType(),
