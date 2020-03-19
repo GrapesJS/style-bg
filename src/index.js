@@ -5,7 +5,6 @@ import { typeBgKey } from './utils';
 
 export default (editor, opts = {}) => {
   const options = { ...{
-    i18n: {},
     // Options for the `grapesjs-style-gradient` plugin
     styleGradientOpts: {},
 

@@ -1,50 +1,17 @@
 # Grapesjs Style Bg
 
-[DEMO](##)
-> **Provide a live demo of your plugin**
-For a better user engagement create a simple live demo by using services like [JSFiddle](https://jsfiddle.net) [CodeSandbox](https://codesandbox.io) [CodePen](https://codepen.io) and link it here in your README (attaching a screenshot/gif will also be a plus).
-To help you in this process here below you will find the necessary HTML/CSS/JS, so it just a matter of copy-pasting on some of those services. After that delete this part and update the link above
+Full stack background style property type for GrapesJS, with the possibility to add images, colors and gradients.
 
-### HTML
-```html
-<link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet">
-<script src="https://unpkg.com/grapesjs"></script>
-<script src="https://unpkg.com/grapesjs-style-bg"></script>
+![gradient-prv](https://user-images.githubusercontent.com/11614725/77124488-461ed400-6a43-11ea-9cc5-f80bd3729ef3.jpg)
 
-<div id="gjs"></div>
-```
-
-### JS
-```js
-const editor = grapesjs.init({
-	container: '#gjs',
-  height: '100%',
-  fromElement: true,
-  storageManager: false,
-  plugins: ['grapesjs-style-bg'],
-});
-```
-
-### CSS
-```css
-body, html {
-  margin: 0;
-  height: 100%;
-}
-```
-
+[DEMO](https://grapesjs.com/demo.html)
 
 ## Summary
 
 * Plugin name: `grapesjs-style-bg`
-* Components
-    * `component-id-1`
-    * `component-id-2`
-    * ...
-* Blocks
-    * `block-id-1`
-    * `block-id-2`
-    * ...
+* Style Manager properties
+    * `bg` The main background type
+    * `color-linear` Like a simple color picker but with the output compatible with `background-image`
 
 
 
