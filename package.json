@@ -1,6 +1,6 @@
 {
   "name": "grapesjs-style-bg",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Grapesjs Style Bg",
   "main": "dist/grapesjs-style-bg.min.js",
   "repository": {
@@ -9,8 +9,7 @@
   },
   "scripts": {
     "start": "grapesjs-cli serve",
-    "build": "grapesjs-cli build",
-    "bump": "npm version patch -m 'Bump v%s'"
+    "build": "grapesjs-cli build"
   },
   "keywords": [
     "grapesjs",
