@@ -61,6 +61,7 @@ export default (editor, opts = {}) => {
         detached: 1,
         preview: 1,
         full: 1,
+        prepend: 1,
         properties: [
           styleTypes.typeBg,
           ...getPropsByType(),
