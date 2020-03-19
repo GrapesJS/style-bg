@@ -123,7 +123,7 @@ export default (editor, opts = {}) => {
             })
           });
         }
-        console.log({ layers, resultValue });
+
         return layers;
       },
     }),
