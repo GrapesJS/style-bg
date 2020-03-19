@@ -19,5 +19,8 @@
   "devDependencies": {
     "grapesjs-cli": "^1.0.12"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "grapesjs-style-gradient": "^2.0.1"
+  }
 }
