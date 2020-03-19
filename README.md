@@ -1,6 +1,6 @@
 # Grapesjs Style Bg
 
-Full stack background style property type for GrapesJS, with the possibility to add images, colors and gradients.
+Full-stack background style property type for GrapesJS, with the possibility to add images, colors, and gradients.
 
 ![gradient-prv](https://user-images.githubusercontent.com/11614725/77124488-461ed400-6a43-11ea-9cc5-f80bd3729ef3.jpg)
 
@@ -19,7 +19,9 @@ Full stack background style property type for GrapesJS, with the possibility to 
 
 | Option | Description | Default |
 |-|-|-
-| `option1` | Description option | `default value` |
+| `styleGradientOpts` | Options for the `grapesjs-style-gradient` plugin  | `{}` |
+| `propExtender` | Extend single style property definition of the plugin. You can this, for example, to change the defauld gradient picker color | `prop => prop` |
+| `typeProps` | Use this function to change/add/extend inner style properties of each background type. For example, you can replace the *Position* `select` type (of the *image* bg type) with some other kind of type or options | `(result, type) => result` |
 
 
 
@@ -36,9 +38,10 @@ Full stack background style property type for GrapesJS, with the possibility to 
 
 ## Usage
 
-Directly in the browser
+Directly in the browser (remember to include the [Grapick](https://github.com/artf/grapick) CSS)
 ```html
 <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet"/>
+<link href="https://unpkg.com/grapick/dist/grapick.min.css" rel="stylesheet">
 <script src="https://unpkg.com/grapesjs"></script>
 <script src="path/to/grapesjs-style-bg.min.js"></script>
 
@@ -61,6 +64,7 @@ Modern javascript
 import grapesjs from 'grapesjs';
 import plugin from 'grapesjs-style-bg';
 import 'grapesjs/dist/css/grapes.min.css';
+import 'grapick/dist/grapick.min.css';
 
 const editor = grapesjs.init({
   container : '#gjs',
