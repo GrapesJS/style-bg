@@ -1,7 +1,7 @@
 {
   "name": "grapesjs-style-bg",
   "version": "1.0.1",
-  "description": "Grapesjs Style Bg",
+  "description": "Full-stack background style property type for GrapesJS, with the possibility to add images, colors, and gradients",
   "main": "dist/grapesjs-style-bg.min.js",
   "repository": {
     "type": "git",
