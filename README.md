@@ -2,7 +2,7 @@
 
 Full-stack background style property type for GrapesJS, with the possibility to add images, colors, and gradients.
 
-> Requires GrapesJS v0.14.3 or higher
+> Requires GrapesJS v0.16.3 or higher
 
 ![gradient-prv](https://user-images.githubusercontent.com/11614725/77124488-461ed400-6a43-11ea-9cc5-f80bd3729ef3.jpg)
 
