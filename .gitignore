@@ -4,4 +4,3 @@ private/
 node_modules/
 *.log
 _index.html
-dist/
