@@ -48,8 +48,6 @@ export default (editor, opts = {}) => {
 
   styleGradient(editor, {
     colorPicker: 'default',
-    inputDirection: { property: '__gradient-direction' },
-    inputType: { property: '__gradient-type' },
     ...options.styleGradientOpts,
   });
   loadColorLinear(editor, sm);
@@ -97,7 +95,6 @@ export default (editor, opts = {}) => {
         const layers = [];
         const layerValues = resultValue || target.getStyle()[this.get('property')];
         const types = layerValues[typeBgKey];
-
         if (types) {
           this.splitValues(types).forEach((type, idx) => {
             const props = getPropsByType(type);
