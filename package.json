@@ -16,10 +16,10 @@
     "plugin"
   ],
   "devDependencies": {
-    "grapesjs-cli": "^1.0.12"
+    "grapesjs-cli": "^1.0.14"
   },
   "license": "MIT",
   "dependencies": {
-    "grapesjs-style-gradient": "^2.0.3"
+    "grapesjs-style-gradient": "^2.0.4"
   }
 }
