@@ -20,6 +20,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "grapesjs-style-gradient": "^2.0.4"
+    "grapesjs-style-gradient": "^2.0.14"
   }
 }
