@@ -25,44 +25,46 @@
 
 
     <script type="text/javascript">
-      const editor = grapesjs.init({
-        height: '100%',
-        container: '#gjs',
-        showOffsets: true,
-        fromElement: true,
-        noticeOnUnload: false,
-        storageManager: false,
-        assetManager: {
-          assets: [
-            'https://placehold.it/350x250/78c5d6/fff/image1.jpg',
-            'https://placehold.it/350x250/459ba8/fff/image2.jpg',
-            'https://placehold.it/350x250/79c267/fff/image3.jpg',
-          ]
-        },
-        plugins: ['grapesjs-style-bg'],
-        pluginsOpts: {
-          'grapesjs-style-bg': {},
-        },
-      });
-
-      editor.I18n.addMessages({
-        en: {
-          styleManager: {
-            properties: {
-              'background-repeat': 'Repeat',
-              'background-position': 'Position',
-              'background-attachment': 'Attachment',
-              'background-size': 'Size',
-            }
+      setTimeout(() => {
+        const editor = grapesjs.init({
+          height: '100%',
+          container: '#gjs',
+          showOffsets: true,
+          fromElement: true,
+          noticeOnUnload: false,
+          storageManager: false,
+          assetManager: {
+            assets: [
+              'https://placehold.it/350x250/78c5d6/fff/image1.jpg',
+              'https://placehold.it/350x250/459ba8/fff/image2.jpg',
+              'https://placehold.it/350x250/79c267/fff/image3.jpg',
+            ]
           },
-        }
-      });
+          plugins: ['grapesjs-style-bg'],
+          pluginsOpts: {
+            'grapesjs-style-bg': {},
+          },
+        });
 
-      editor.StyleManager.addProperty('extra', [{
-        name: 'Background',
-        property: 'background',
-        type: 'bg',
-      }]);
+        editor.I18n.addMessages({
+          en: {
+            styleManager: {
+              properties: {
+                'background-repeat': 'Repeat',
+                'background-position': 'Position',
+                'background-attachment': 'Attachment',
+                'background-size': 'Size',
+              }
+            },
+          }
+        });
+
+        editor.StyleManager.addProperty('extra', [{
+          name: 'Background',
+          property: 'background',
+          type: 'bg',
+        }]);
+      }, 10);
     </script>
   </body>
 </html>
