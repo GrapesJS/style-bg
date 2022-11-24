@@ -1,32 +1,49 @@
+import type grapesjs from 'grapesjs';
+// @ts-ignore
 import styleGradient from 'grapesjs-style-gradient';
 import * as styleTypesAll from './styleTypes';
 import loadColorLinear from './colorLinear';
 import { typeBgKey } from './utils';
 
-export default (editor, opts = {}) => {
-  const options = { ...{
-    // Options for the `grapesjs-style-gradient` plugin
+export interface PluginOptions {
+  /**
+   * Options for the `grapesjs-style-gradient` plugin.
+   * @default {}
+   */
+  styleGradientOpts?: Record<string, any>,
+
+  /**
+   * Extend single style property definition of the plugin.
+   * You can, for example, change the default gradient color.
+   */
+  propExtender?: (prop: any) => any,
+
+  /**
+   * Use this function to change/add/extend style properties for each BG type.
+   */
+  typeProps?: (prop: any, type: string) => any,
+};
+
+const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
+  const options: PluginOptions = {
     styleGradientOpts: {},
-
-    // Extend single style property definition of the plugin.
-    // You can this, for example, to change the defauld gradient color
     propExtender: p => p,
-
-    // Use this function to change/add/extend style properties for each BG type
     typeProps: p => p,
-  },  ...opts };
+    ...opts,
+  };
 
   let styleTypes = { ...styleTypesAll };
   const sm = editor.StyleManager;
   const stack = sm.getType('stack');
   const propModel = stack.model;
   styleTypes = Object.keys(styleTypes).reduce((acc, item) => {
+    // @ts-ignore
     const prop = styleTypes[item];
-    acc[item] = options.propExtender(prop) || prop;
+    acc[item] = options.propExtender?.(prop) || prop;
     return acc;
-  }, {});
-  const getPropsByType = type => {
-    let result = [
+  }, {} as any);
+  const getPropsByType = (type: string) => {
+    let result: any = [
       styleTypes.typeImage,
       styleTypes.typeBgRepeat,
       styleTypes.typeBgPos,
@@ -43,14 +60,14 @@ export default (editor, opts = {}) => {
         break;
     }
 
-    return options.typeProps(result, type) || result;
+    return options.typeProps?.(result, type) || result;
   };
 
   styleGradient(editor, {
     colorPicker: 'default',
     ...options.styleGradientOpts,
   });
-  loadColorLinear(editor, sm);
+  loadColorLinear(editor);
   sm.addType('bg', {
     model: propModel.extend({
       defaults: () => ({
@@ -61,7 +78,7 @@ export default (editor, opts = {}) => {
         prepend: 1,
         properties: [
           styleTypes.typeBg,
-          ...getPropsByType(),
+          ...getPropsByType(''),
         ],
       }),
 
@@ -70,38 +87,38 @@ export default (editor, opts = {}) => {
         this.listenTo(this.getLayers(), 'add', this.onNewLayerAdd);
       },
 
-      _updateLayerProps(layer, type) {
+      _updateLayerProps(layer: any, type: string) {
         const props = layer.get('properties');
-        props.remove(props.filter((it, id) => id !== 0));
-        getPropsByType(type).forEach(item => props.push(item))
+        props.remove(props.filter((it: any, id: number) => id !== 0));
+        getPropsByType(type).forEach((item: string) => props.push(item))
       },
 
       /**
        * On new added layer we should listen to filter_type change
        * @param  {Layer} layer
        */
-      onNewLayerAdd(layer) {
+      onNewLayerAdd(layer: any) {
         const typeProp = layer.getPropertyAt(0);
         layer.listenTo(typeProp, 'change:value', this.handleTypeChange)
       },
 
-      handleTypeChange(propType, type, opts) {
+      handleTypeChange(propType: any, type: string, opts: any) {
         const currLayer = this.getCurrentLayer();
         currLayer && this._updateLayerProps(currLayer, type);
         opts.fromInput && this.trigger('updateValue');
       },
 
-      getLayersFromTarget(target, { resultValue } = {}) {
-        const layers = [];
+      getLayersFromTarget(target: any, { resultValue }: any = {}) {
+        const layers: any[] = [];
         const layerValues = resultValue || target.getStyle()[this.get('property')];
         const types = layerValues[typeBgKey];
         if (types) {
-          this.splitValues(types).forEach((type, idx) => {
+          this.splitValues(types).forEach((type: string, idx: number) => {
             const props = getPropsByType(type);
             layers.push({
               properties: [
                 { ...styleTypes.typeBg, value: type },
-                ...props.map(prop => {
+                ...props.map((prop: any) => {
                   const values = this.splitValues(layerValues[prop.property]);
                   let value = values[idx];
 
@@ -128,3 +145,5 @@ export default (editor, opts = {}) => {
     view: stack.view,
   })
 };
+
+export default plugin;
