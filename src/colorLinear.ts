@@ -1,8 +1,10 @@
-export default (editor, sm) => {
-  const typeColor = sm.getType('color');
+import type grapesjs from 'grapesjs';
+
+export default (editor: grapesjs.Editor) => {
+  const typeColor = editor.Styles.getType('color');
   const propModel = typeColor.model;
 
-  sm.addType('color-linear', {
+  editor.Styles.addType('color-linear', {
     model: propModel.extend({
         getFullValue() {
             const value = this.get('value');
