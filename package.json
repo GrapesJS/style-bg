@@ -16,7 +16,8 @@
     "plugin"
   ],
   "devDependencies": {
-    "grapesjs-cli": "^1.0.14"
+    "grapesjs": "^0.20.1",
+    "grapesjs-cli": "^3.0.1"
   },
   "license": "MIT",
   "dependencies": {
