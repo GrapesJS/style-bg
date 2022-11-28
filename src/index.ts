@@ -1,8 +1,6 @@
 import type grapesjs from 'grapesjs';
 import styleGradient, { PluginOptions as StyleGradientOptions, parseGradient } from 'grapesjs-style-gradient';
 import * as styleTypesAll from './styleTypes';
-import loadColorLinear from './colorLinear';
-import { typeBgKey } from './utils';
 
 export interface PluginOptions {
   /**
@@ -61,8 +59,6 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
     colorPicker: 'default',
     ...options.styleGradientOpts,
   });
-
-  loadColorLinear(editor);
 
   const unitsTime = ['s', 'ms'];
 
