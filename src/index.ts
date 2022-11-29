@@ -15,7 +15,7 @@ export interface PluginOptions {
   propExtender?: (prop: any) => any,
 };
 
-enum BackgroundType {
+export enum BackgroundType {
  Image = 'image',
  Color = 'color',
  Grad = 'grad',
@@ -28,6 +28,11 @@ const capitalize = (str: string) => {
 };
 
 const bgTypeIconAttrs = 'style="max-height: 16px; display: block; margin: 0 auto" viewBox="0 0 24 24"';
+const PROPERTY_IMAGE = 'background-image';
+const PROPERTY_BG_TYPE = '__background-type';
+const PROPERTY_BG_IMAGE = PROPERTY_IMAGE;
+const PROPERTY_BG_COLOR = `${PROPERTY_BG_IMAGE}-color`;
+const PROPERTY_BG_GRAD = `${PROPERTY_BG_IMAGE}-gradient`;
 
 const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
   const options: PluginOptions = {
@@ -40,11 +45,6 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
     colorPicker: 'default',
     ...options.styleGradientOpts,
   });
-
-  const PROPERTY_BG_TYPE = '--background-type';
-  const PROPERTY_BG_IMAGE = 'background-image';
-  const PROPERTY_BG_COLOR = 'background-img-color';
-  const PROPERTY_BG_GRAD = 'background-img-gradient';
 
   editor.Styles.addBuiltIn('background', {
     type: 'stack',
@@ -61,9 +61,9 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
       const props = property.getProperties();
       let layers: any = [];
 
-      if (style['background-image']) {
+      if (style[PROPERTY_IMAGE]) {
         // Get layers from the background-image property
-        layers = property.__splitStyleName(style, 'background-image', sep)
+        layers = property.__splitStyleName(style, PROPERTY_IMAGE, sep)
         .map((imagePart: string) => {
           const result: Record<string, any> = {
             [PROPERTY_BG_TYPE]: BackgroundType.Image,
@@ -96,15 +96,15 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
         // Update layers by inner properties
         props.forEach((prop: any) => {
           const id = prop.getId();
-          property.__splitStyleName(style, prop.getName(), sep)
+          const propName = prop.getName();
+          if (propName === PROPERTY_IMAGE) return;
+          property.__splitStyleName(style, propName, sep)
             .map((value: string) => ({ [id]: value || prop.getDefaultValue() }))
             .forEach((inLayer: any, i: number) => {
               layers[i] = layers[i] ? { ...layers[i], ...inLayer } : inLayer;
             });
         });
       }
-
-      console.log('fromStyle', { style, layers });
 
       return layers;
     },
@@ -120,8 +120,6 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
         image = values[PROPERTY_BG_GRAD];
       }
 
-      console.log('TO STYLE', { values, image });
-
       delete values[PROPERTY_BG_IMAGE];
       delete values[PROPERTY_BG_COLOR];
       delete values[PROPERTY_BG_GRAD];
@@ -133,6 +131,7 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
     },
     properties: [
       {
+        label: ' ',
         property: PROPERTY_BG_TYPE,
         type: 'radio',
         default: BackgroundType.Image,
@@ -155,13 +154,14 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
         ],
         onChange({ property, to }: any) {
           const newTypeValue = to.value;
+
+          // Hide style properties based on selected type
           if (newTypeValue) {
-            const parentProps = property.getParent().getProperties();
-            parentProps.forEach((prop: any) => {
+            property.getParent().getProperties().forEach((prop: any) => {
               const propName = prop.getName();
               let visible = false;
 
-              // Bg type is always visible
+              // Background type is always visible
               if (propName === PROPERTY_BG_TYPE) return;
 
               if (
@@ -177,8 +177,6 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
 
               prop.up({ visible });
             });
-
-            console.log('type change', newTypeValue, parentProps);
           }
         }
       },
@@ -247,85 +245,6 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
       },
     ].map(prop => options.propExtender?.(prop) || prop)
   });
-
-  /*
-  sm.addType('bg', {
-    model: propModel.extend({
-      defaults: () => ({
-        ...propModel.prototype.defaults,
-        detached: 1,
-        preview: 1,
-        full: 1,
-        prepend: 1,
-        properties: [
-          styleTypes.typeBg,
-          ...getPropsByType(''),
-        ],
-      }),
-
-      init() {
-        this.handleTypeChange = this.handleTypeChange.bind(this);
-        this.listenTo(this.getLayers(), 'add', this.onNewLayerAdd);
-      },
-
-      _updateLayerProps(layer: any, type: string) {
-        const props = layer.get('properties');
-        props.remove(props.filter((it: any, id: number) => id !== 0));
-        getPropsByType(type).forEach((item: string) => props.push(item))
-      },
-
-      /**
-       * On new added layer we should listen to filter_type change
-       * @param  {Layer} layer
-       *
-      onNewLayerAdd(layer: any) {
-        const typeProp = layer.getPropertyAt(0);
-        layer.listenTo(typeProp, 'change:value', this.handleTypeChange)
-      },
-
-      handleTypeChange(propType: any, type: string, opts: any) {
-        const currLayer = this.getCurrentLayer();
-        currLayer && this._updateLayerProps(currLayer, type);
-        opts.fromInput && this.trigger('updateValue');
-      },
-
-      getLayersFromTarget(target: any, { resultValue }: any = {}) {
-        const layers: any[] = [];
-        const layerValues = resultValue || target.getStyle()[this.get('property')];
-        const types = layerValues[typeBgKey];
-        if (types) {
-          this.splitValues(types).forEach((type: string, idx: number) => {
-            const props = getPropsByType(type);
-            layers.push({
-              properties: [
-                { ...styleTypes.typeBg, value: type },
-                ...props.map((prop: any) => {
-                  const values = this.splitValues(layerValues[prop.property]);
-                  let value = values[idx];
-
-                  if (prop.type == 'color-linear') {
-                    const parsedValue = this.parseValue(value, { complete: 1 });
-                    value = this.splitValues(parsedValue.value)[0];
-                  } else if (prop.type == 'file') {
-                    value = value && this.parseValue(value, { complete: 1 }).value;
-                  }
-
-                  return {
-                    ...prop,
-                    ...value && { value },
-                  }
-                }),
-              ]
-            })
-          });
-        }
-
-        return layers;
-      },
-    }),
-    view: stack.view,
-  })
-  */
 };
 
 export default plugin;
