@@ -33,6 +33,7 @@ const PROPERTY_BG_TYPE = '__background-type';
 const PROPERTY_BG_IMAGE = PROPERTY_IMAGE;
 const PROPERTY_BG_COLOR = `${PROPERTY_BG_IMAGE}-color`;
 const PROPERTY_BG_GRAD = `${PROPERTY_BG_IMAGE}-gradient`;
+const DEFAULT_IMAGE = 'none';
 
 const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
   const options: PluginOptions = {
@@ -45,6 +46,33 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
     colorPicker: 'default',
     ...options.styleGradientOpts,
   });
+
+  const onBgTypeChange = ({ property, to }: any) => {
+    const newTypeValue = to.value;
+
+    // Hide style properties based on selected type
+    if (newTypeValue) {
+      property.getParent().getProperties().forEach((prop: any) => {
+        const propName = prop.getName();
+        let visible = false;
+        // Background type is always visible
+        if (propName === PROPERTY_BG_TYPE) return;
+
+        if (
+          (
+            newTypeValue === BackgroundType.Image &&
+            [PROPERTY_BG_COLOR, PROPERTY_BG_GRAD].indexOf(propName) < 0
+          )
+          || (newTypeValue === BackgroundType.Color && propName === PROPERTY_BG_COLOR)
+          || (newTypeValue === BackgroundType.Grad && propName === PROPERTY_BG_GRAD)
+        ) {
+          visible = true;
+        }
+
+        prop.up({ visible });
+      });
+    }
+  };
 
   editor.Styles.addBuiltIn('background', {
     type: 'stack',
@@ -115,7 +143,7 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
 
       if (type === BackgroundType.Color) {
         const bgColor = values[PROPERTY_BG_COLOR];
-        image = `linear-gradient(${bgColor} 0%, ${bgColor} 100%)`;
+        image = bgColor === DEFAULT_IMAGE ? DEFAULT_IMAGE : `linear-gradient(${bgColor} 0%, ${bgColor} 100%)`;
       } else if (type === BackgroundType.Grad) {
         image = values[PROPERTY_BG_GRAD];
       }
@@ -126,7 +154,7 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
 
       return {
         ...values,
-        'background-image': image,
+        'background-image': image || DEFAULT_IMAGE,
       };
     },
     properties: [
@@ -135,6 +163,7 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
         property: PROPERTY_BG_TYPE,
         type: 'radio',
         default: BackgroundType.Image,
+        onChange: onBgTypeChange,
         options: [
           {
             id: BackgroundType.Image,
@@ -152,33 +181,6 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
             label: `<svg ${bgTypeIconAttrs}><path fill="currentColor" d="M11 9h2v2h-2V9m-2 2h2v2H9v-2m4 0h2v2h-2v-2m2-2h2v2h-2V9M7 9h2v2H7V9m12-6H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2M9 18H7v-2h2v2m4 0h-2v-2h2v2m4 0h-2v-2h2v2m2-7h-2v2h2v2h-2v-2h-2v2h-2v-2h-2v2H9v-2H7v2H5v-2h2v-2H5V5h14v6z"/></svg>`,
           },
         ],
-        onChange({ property, to }: any) {
-          const newTypeValue = to.value;
-
-          // Hide style properties based on selected type
-          if (newTypeValue) {
-            property.getParent().getProperties().forEach((prop: any) => {
-              const propName = prop.getName();
-              let visible = false;
-
-              // Background type is always visible
-              if (propName === PROPERTY_BG_TYPE) return;
-
-              if (
-                (
-                  newTypeValue === 'image' &&
-                  [PROPERTY_BG_COLOR, PROPERTY_BG_GRAD].indexOf(propName) < 0
-                )
-                || (newTypeValue === 'color' && propName === PROPERTY_BG_COLOR)
-                || (newTypeValue === 'grad' && propName === PROPERTY_BG_GRAD)
-              ) {
-                visible = true;
-              }
-
-              prop.up({ visible });
-            });
-          }
-        }
       },
       {
         label: 'Image',
