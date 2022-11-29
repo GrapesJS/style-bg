@@ -33,7 +33,7 @@ const capitalize = (str: string) => {
   return str && str.charAt(0).toUpperCase() + str.substring(1);
 };
 
-const bgTypeStyle = 'style="max-height: 16px; display: block; margin: 0 auto" viewBox="0 0 24 24"';
+const bgTypeIconAttrs = 'style="max-height: 16px; display: block; margin: 0 auto" viewBox="0 0 24 24"';
 
 const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
   const options: PluginOptions = {
@@ -59,12 +59,6 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
     colorPicker: 'default',
     ...options.styleGradientOpts,
   });
-
-  const unitsTime = ['s', 'ms'];
-
-  const unitsAngle = ['deg', 'rad', 'grad'];
-
-  const unitsSize = ['px', '%', 'em', 'rem', 'vw', 'vh'];
 
   const PROPERTY_BG_TYPE = '--background-type';
   const PROPERTY_BG_IMAGE = 'background-image';
@@ -165,17 +159,17 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
           {
             id: BackgroundType.Image,
             title: 'Image',
-            label: `<svg ${bgTypeStyle}><path fill="currentColor" d="M8.5 13.5l2.5 3 3.5-4.5 4.5 6H5m16 1V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2z"/></svg>`,
+            label: `<svg ${bgTypeIconAttrs}><path fill="currentColor" d="M8.5 13.5l2.5 3 3.5-4.5 4.5 6H5m16 1V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2z"/></svg>`,
           },
           {
             id: BackgroundType.Color,
             title: 'Color',
-            label: `<svg ${bgTypeStyle}><path fill="currentColor" d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z"/></svg>`,
+            label: `<svg ${bgTypeIconAttrs}><path fill="currentColor" d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z"/></svg>`,
           },
           {
             id: BackgroundType.Grad,
             title: 'Gradient',
-            label: `<svg ${bgTypeStyle}><path fill="currentColor" d="M11 9h2v2h-2V9m-2 2h2v2H9v-2m4 0h2v2h-2v-2m2-2h2v2h-2V9M7 9h2v2H7V9m12-6H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2M9 18H7v-2h2v2m4 0h-2v-2h2v2m4 0h-2v-2h2v2m2-7h-2v2h2v2h-2v-2h-2v2h-2v-2h-2v2H9v-2H7v2H5v-2h2v-2H5V5h14v6z"/></svg>`,
+            label: `<svg ${bgTypeIconAttrs}><path fill="currentColor" d="M11 9h2v2h-2V9m-2 2h2v2H9v-2m4 0h2v2h-2v-2m2-2h2v2h-2V9M7 9h2v2H7V9m12-6H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2M9 18H7v-2h2v2m4 0h-2v-2h2v2m4 0h-2v-2h2v2m2-7h-2v2h2v2h-2v-2h-2v2h-2v-2h-2v2H9v-2H7v2H5v-2h2v-2H5V5h14v6z"/></svg>`,
           },
         ],
         onChange({ property, to }: any) {
