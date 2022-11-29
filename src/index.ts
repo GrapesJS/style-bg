@@ -1,6 +1,5 @@
 import type grapesjs from 'grapesjs';
 import styleGradient, { PluginOptions as StyleGradientOptions, parseGradient } from 'grapesjs-style-gradient';
-import * as styleTypesAll from './styleTypes';
 
 export interface PluginOptions {
   /**
@@ -14,11 +13,6 @@ export interface PluginOptions {
    * You can, for example, change the default gradient color.
    */
   propExtender?: (prop: any) => any,
-
-  /**
-   * Use this function to change/add/extend style properties for each BG type.
-   */
-  typeProps?: (prop: any, type: string) => any,
 };
 
 enum BackgroundType {
@@ -39,21 +33,8 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
   const options: PluginOptions = {
     styleGradientOpts: {},
     propExtender: p => p,
-    typeProps: p => p,
     ...opts,
   };
-
-  let styleTypes = { ...styleTypesAll };
-  const { Styles } = editor;
-  const sm = editor.StyleManager;
-  const stack = sm.getType('stack');
-  const propModel = stack.model;
-  styleTypes = Object.keys(styleTypes).reduce((acc, item) => {
-    // @ts-ignore
-    const prop = styleTypes[item];
-    acc[item] = options.propExtender?.(prop) || prop;
-    return acc;
-  }, {} as any);
 
   styleGradient(editor, {
     colorPicker: 'default',
@@ -65,7 +46,7 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
   const PROPERTY_BG_COLOR = 'background-img-color';
   const PROPERTY_BG_GRAD = 'background-img-gradient';
 
-  Styles.addBuiltIn('background', {
+  editor.Styles.addBuiltIn('background', {
     type: 'stack',
     layerSeparator: /(?<!\(.*[^)]),(?![^(]*\))/,
     layerJoin: ', ',
@@ -264,7 +245,7 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
         property: 'background-size',
         options: getOptions(['auto', 'cover', 'contain']),
       },
-    ]
+    ].map(prop => options.propExtender?.(prop) || prop)
   });
 
   /*
