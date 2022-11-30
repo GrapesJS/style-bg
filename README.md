@@ -6,7 +6,7 @@ Full-stack background style property type for GrapesJS, with the possibility to 
 
 ![gradient-prv](https://user-images.githubusercontent.com/11614725/77124488-461ed400-6a43-11ea-9cc5-f80bd3729ef3.jpg)
 
-[DEMO](https://grapesjs.com/demo.html)
+[DEMO](https://codepen.io/artf/pen/GRGXdYe)
 
 ## Summary
 
