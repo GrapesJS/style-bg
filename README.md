@@ -20,7 +20,7 @@ Full-stack background style property type for GrapesJS, with the possibility to 
 | Option | Description | Default |
 |-|-|-
 | `styleGradientOpts` | Options for the `grapesjs-style-gradient` plugin  | `{}` |
-| `propExtender` | Extend single style property definition of the plugin. You can this, for example, to change the defauld gradient picker color | `prop => prop` |
+| `propExtender` | Extend single style property definition of the `background` property. | `prop => prop` |
 
 
 
