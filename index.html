@@ -41,7 +41,7 @@
 
 
     <script type="text/javascript">
-      setTimeout(() => {
+      window.onload = () => {
         const editor = grapesjs.init({
           height: '100%',
           container: '#gjs',
@@ -74,7 +74,8 @@
             },
           }
         });
-      }, 10);
+        window.editor = editor;
+      };
     </script>
   </body>
 </html>
