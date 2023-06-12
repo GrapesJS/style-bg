@@ -31,7 +31,7 @@ Full-stack background style property type for GrapesJS, with the possibility to 
 * NPM
   * `npm i grapesjs-style-bg`
 * GIT
-  * `git clone https://github.com/artf/grapesjs-style-bg.git`
+  * `git clone https://github.com/GrapesJS/style-bg.git`
 
 
 
@@ -86,7 +86,7 @@ const editor = grapesjs.init({
 Clone the repository
 
 ```sh
-$ git clone https://github.com/artf/grapesjs-style-bg.git
+$ git clone https://github.com/GrapesJS/style-bg.git
 $ cd grapesjs-style-bg
 ```
 

@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/artf/grapesjs-style-bg.git"
+    "url": "https://github.com/GrapesJS/style-bg.git"
   },
   "scripts": {
     "start": "grapesjs-cli serve",
