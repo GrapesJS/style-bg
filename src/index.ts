@@ -1,5 +1,5 @@
-import type grapesjs from 'grapesjs';
-import styleGradient, { PluginOptions as StyleGradientOptions, parseGradient, toGradient, getValidDir, GRAD_DIRS, GRAD_TYPES } from 'grapesjs-style-gradient';
+import type { Plugin } from 'grapesjs';
+import styleGradient, { GRAD_DIRS, GRAD_TYPES, PluginOptions as StyleGradientOptions, getValidDir, parseGradient, toGradient } from 'grapesjs-style-gradient';
 
 export interface PluginOptions {
   /**
@@ -72,7 +72,7 @@ const PROPERTY_BG_GRAD_TYPE = `${PROPERTY_BG_GRAD}-type`;
 
 const DEFAULT_IMAGE = 'none';
 
-const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
+const plugin: Plugin<PluginOptions> = (editor, opts = {}) => {
   const options: PluginOptions = {
     styleGradientOpts: {},
     propExtender: p => p,
@@ -118,6 +118,7 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opts = {}) => {
 
   editor.Styles.addBuiltIn('background', {
     type: 'stack',
+    // @ts-ignore
     layerSeparator: /(?<!\(.*[^)]),(?![^(]*\))/,
     layerJoin: ', ',
     detached: true,
